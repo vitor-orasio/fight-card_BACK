@@ -16,6 +16,10 @@ import model.entities.User;
 public class CharacterDaoJDBC implements CharacterDao {
 	private Connection conn;
 	
+	public CharacterDaoJDBC(Connection conn) {
+		this.conn = conn;
+	}
+	
 	@Override
 	public void insert(Character character) {
 		PreparedStatement st = null;
@@ -93,6 +97,31 @@ public class CharacterDaoJDBC implements CharacterDao {
 		
 		return character;
 	}
+	
+	@Override
+	public Character findById(Integer id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		Character character = null;
+		
+		try {
+			st = conn.prepareStatement("SELECT * FROM tb_character WHERE id_character = ?");
+			
+			st.setInt(1, id);
+			
+			rs = st.executeQuery();
+			if(rs.next()) {
+				character = instantiateCharacter(rs);
+			}
+			
+			return character;
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DbConnection.closeStatement(st);
+			DbConnection.closeResultSet(rs);
+		}
+	}
 
 	@Override
 	public void update(Character character) {
@@ -104,12 +133,6 @@ public class CharacterDaoJDBC implements CharacterDao {
 	public void deleteById(Integer id) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public Character characterById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
