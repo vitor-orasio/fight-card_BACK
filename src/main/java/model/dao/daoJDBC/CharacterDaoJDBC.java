@@ -21,95 +21,6 @@ public class CharacterDaoJDBC implements CharacterDao {
 	}
 	
 	@Override
-	public void insert(Character character) {
-		PreparedStatement st = null;
-		
-		try {
-			st = conn.prepareStatement("INSERT INTO tb_character(user_id, archetype_character, name_character, attack_character, defense_character, ranking_type, img_character)"
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?)", java.sql.Statement.RETURN_GENERATED_KEYS);
-			
-			st.setInt(1, character.getUser().getId());
-			st.setString(2, character.getArchetype());
-			st.setString(3, character.getName());
-			st.setInt(4, character.getAttack());
-			st.setInt(5, character.getDefense());
-			st.setString(6, character.getRanking_type());
-			st.setString(7, character.getImg_perfil());
-			
-			int rowsAffected = st.executeUpdate();
-			
-			if(rowsAffected > 0) {
-				ResultSet rs = st.getGeneratedKeys();
-				
-				if(rs.next()) {
-					int id = rs.getInt(1);
-					character.setId(id);
-				}
-				
-				DbConnection.closeResultSet(rs);
-			} else {
-				throw new DbException("Unexpected error! No rows affected!");
-			}
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DbConnection.closeStatement(st);
-		}
-	}
-	
-	@Override
-	public List<Character> findAll() {
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		
-		try {
-			st = conn.prepareStatement("SELECT * FROM tb_character");
-			
-			rs = st.executeQuery();
-			List<Character> listCharacter = new ArrayList<Character>();
-			
-			while(rs.next()) {
-//				Character character = instantiateCharacter(rs, user);
-//				listCharacter.add(character);
-			}
-			
-			return listCharacter;
-		} catch(SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DbConnection.closeStatement(st);
-			DbConnection.closeResultSet(rs);
-		}
-	}
-	
-	
-	private Character instantiateCharacter(ResultSet rs, User user) throws SQLException {
-		Character character = new Character();
-		
-		character.setId(rs.getInt("id_character"));
-		character.setUser(user);
-		character.setArchetype(rs.getString("archetype_character"));
-		character.setName(rs.getString("name_character"));
-		character.setAttack(rs.getInt("attack_character"));
-		character.setDefense(rs.getInt("defense_character"));
-		character.setRanking_type(rs.getString("ranking_type"));
-		character.setImg_perfil(rs.getString("img_character"));
-		
-		
-		return character;
-	}
-	
-	private User instantiateUser(ResultSet rs) throws SQLException {
-		User user = new User();
-		user.setId(rs.getInt("id_user"));
-		user.setUsername(rs.getString("name_user"));
-		user.setPassword(rs.getString("password_user"));
-		user.setEmail(rs.getString("email_user"));
-		
-		return user;
-	}
-	
-	@Override
 	public Character findById(Integer id) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -138,6 +49,17 @@ public class CharacterDaoJDBC implements CharacterDao {
 			DbConnection.closeResultSet(rs);
 		}
 	}
+	
+	@Override
+	public void insert(Character character) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public List<Character> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void update(Character character) {
@@ -155,5 +77,31 @@ public class CharacterDaoJDBC implements CharacterDao {
 	public User findByUser(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private Character instantiateCharacter(ResultSet rs, User user) throws SQLException {
+		Character character = new Character();
+		
+		character.setId(rs.getInt("id_character"));
+		character.setUser(user);
+		character.setArchetype(rs.getString("archetype_character"));
+		character.setName(rs.getString("name_character"));
+		character.setAttack(rs.getInt("attack_character"));
+		character.setDefense(rs.getInt("defense_character"));
+		character.setRanking_type(rs.getString("ranking_type"));
+		character.setImg_perfil(rs.getString("img_character"));
+		
+		
+		return character;
+	}
+	
+	private User instantiateUser(ResultSet rs) throws SQLException {
+		User user = new User();
+		user.setId(rs.getInt("id_user"));
+		user.setUsername(rs.getString("name_user"));
+		user.setPassword(rs.getString("password_user"));
+		user.setEmail(rs.getString("email_user"));
+		
+		return user;
 	}
 }
