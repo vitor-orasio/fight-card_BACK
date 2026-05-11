@@ -15,10 +15,5 @@ public class Main {
 			System.out.println("Errors here: ");
 			e.printStackTrace();
 		}
-        
-        
-        System.out.println(props.getProperty("username"));
-        System.out.println(props.getProperty("dburl"));
-        System.out.println(props.getProperty("password"));
     }
 }
